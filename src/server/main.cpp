@@ -7,8 +7,15 @@
 
 
 
+// buildin libraries
+#include <cstdio>
+#include <cstdlib>
+
+
 // custom libraries
 #include "connection.h"
+#include "data.h"
+#include "threading.h"
 
 
 
@@ -23,6 +30,9 @@ int main(int argc, char* argv[])
 {
     connection::Init();
     data::Init();
+    // threading::Init();
+
+    data::NewUser("AAA", "BBB");
 
     connection::Listen();
 }
