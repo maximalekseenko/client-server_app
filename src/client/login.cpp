@@ -5,7 +5,7 @@
 #include <filesystem>
 
 
-#include "encrypt.h"
+// #include "encrypt.h"
 
 
 
@@ -22,12 +22,11 @@ void login::Login(bool forceNew)
         configFile.open(configFilePath.string(), std::fstream::out);
         // create config file if does not exist
         // TODO better input
-
-        //
         std::cout << "Login failed. Input correct username and password:" << std::endl;
         std::cout << "username: "; std::cin >> login::username;
         std::cout << "password: "; std::cin >> login::password;
 
+        // TODO encryption
         configFile << login::username << std::endl;
         configFile << login::password << std::endl;
     }

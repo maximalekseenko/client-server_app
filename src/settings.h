@@ -11,4 +11,4 @@
 #define APPVERSION 0
 
 /// encryption number
-#define ENCNUM 3847592
+#define ENCNUM 4793968276703868376938
