@@ -10,7 +10,6 @@ namespace login
     /**
      * @brief login user via config file if it exists
      * 
-     * @param __path path to config file
      * @param forceNew force creation of a new config file
      */
     void Login(bool forceNew = false);
