@@ -9,6 +9,7 @@
 
 // custom libraries
 #include "connection.h"
+#include "login.h"
 
 
 
@@ -21,6 +22,11 @@
  */
 int main (int argc, char* argv[])
 {
+    login::Init(argv[0]);
+    connection::Init(argv[0]);
+
+    login::Login();
+
     connection::Connect();
 
     connection::CreateThread();

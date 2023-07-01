@@ -4,37 +4,70 @@
 
 // buildin libraries
 #include <iostream>
-#include <fstream>
 #include <filesystem>
 
 
 
-void login::Login(bool forceNew)
+void login::Init(const char* __exePath)
 {
-    // TODO fix file location
-    std::filesystem::path configFilePath = std::filesystem::current_path() / "config";
-    std::fstream configFile;
+    login::configFilePath = ((std::string)__exePath).substr(0, ((std::string)__exePath).find_last_of("\\/")) + "/config";
 
-    // check if config file exists
-    configFile.open(configFilePath.string(), std::fstream::in);
-    if (!configFile.good())
+    login::isInited = true;
+}
+
+
+bool login::Login()
+{
+    if (!login::isInited) return false; // TODO ERROR
+
+    if (!login::ReadLogin())
+        return login::WriteLogin();
+        
+    return true;
+}
+
+
+bool login::ReadLogin()
+{
+    if (!login::isInited) return false; // TODO ERROR
+
+    // check if exists
+    login::configFile.open(login::configFilePath, std::fstream::in);
+    if (!configFile.good()) 
     {
-        configFile.open(configFilePath.string(), std::fstream::out);
-        // create config file if does not exist
-        // TODO better input
-        std::cout << "Login failed. Input correct username and password:" << std::endl;
-        std::cout << "username: "; std::cin >> login::username;
-        std::cout << "password: "; std::cin >> login::password;
-
-        // TODO encryption
-        configFile << login::username << std::endl;
-        configFile << login::password << std::endl;
+        login::configFile.close();
+        return false;
     }
-    else
+
+    // read
+    login::configFile >> login::username;
+    login::configFile >> login::password;
+    login::configFile.close();
+
+    // check if readed correctly
+    if (login::username.empty() || login::password.empty())
     {
-        configFile >> login::username;
-        configFile >> login::password;
+        return false;
     }
 
-    configFile.close();
+    return true;
+}
+
+
+bool login::WriteLogin()
+{
+    if (!login::isInited) return false; // TODO ERROR
+
+    // get new login data
+    std::cout << "please input your username and password." << std::endl;
+    std::cout << "username: "; std::cin >> login::username;
+    std::cout << "password: "; std::cin >> login::password;
+
+    // write
+    login::configFile.open(login::configFilePath, std::fstream::out | std::fstream::trunc);
+    login::configFile << login::username << std::endl;
+    login::configFile << login::password << std::endl;
+    login::configFile.close();
+
+    return true;
 }

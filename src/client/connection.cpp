@@ -25,7 +25,7 @@
 
 
 
-void connection::Init()
+void connection::Init(const char* __exePath)
 {
     if (connection::isInited) return;
 
@@ -40,9 +40,9 @@ void connection::Init()
 
 
 
-void connection::Connect()
+bool connection::Connect()
 {
-    if (!connection::isInited) connection::Init();
+    if (!connection::isInited) return false;
 
     // connect
     int _connectionStatus = connect(
@@ -54,11 +54,15 @@ void connection::Connect()
     // check for success
     if (_connectionStatus < 0) {
         printf("[Error]: connection failed!\n");
-        exit(-1);
+        return false;
     }
     else
+    {
         printf("[Info]: connection success!\n");
+        return true;
+    }
 }
+
 
 void connection::CreateThread()
 {
