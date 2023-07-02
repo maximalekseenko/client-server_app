@@ -4,24 +4,34 @@
 
 // buildin libraries
 #include <sqlite3.h>
+#include <vector>
+#include <tuple>
 
 
 
 namespace data
 {
+    using tableDataType = std::tuple<std::string, std::string, int>;
+
     static char* sqlMessaggeError;
     static bool isInited = false;
     static sqlite3* DB;
 
 
-    void Init();
+    void Init(const char * __exePath);
+
+    bool CreateDB();
 
 
-    void CheckPass(const char* __username, const char* __password);
+    bool CheckPass(const char* __username, const char* __password);
 
 
-    void Write(const char* __username, int __type);
+    bool Write(const char* __username, int __type);
 
 
-    void NewUser(const char* username, const char* password);
+    bool AddUser(const char* __username, const char* __password);
+    bool RemUser(const char* __username, const char* __password);
+
+
+    tableDataType GetData(int id);
 }

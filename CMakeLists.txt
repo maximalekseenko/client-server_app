@@ -16,8 +16,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${__BUILD_DIR})
 # |--------------------------------------------------|
 
 
-find_package (SQLite3)
+find_package (SQLite3 REQUIRED)
 include_directories(${SQLite3_INCLUDE_DIRS})
+
+find_package(Curses REQUIRED)
+include_directories(${CURSES_INCLUDE_DIR})
 
 
 # |--------------------------------------------------|
@@ -53,7 +56,12 @@ set(__SERVER_SRCS
     ${__SERVER_DIR}/threading.h
     ${__SERVER_DIR}/data.cpp
     ${__SERVER_DIR}/data.h
+    ${__SERVER_DIR}/window.cpp
+    ${__SERVER_DIR}/window.h
+    ${__SERVER_DIR}/windows.h
 )
 
 add_executable(server ${__SERVER_SRCS})
 target_link_libraries (server ${SQLite3_LIBRARIES})
+target_link_libraries (server ${CURSES_LIBRARIES})
+

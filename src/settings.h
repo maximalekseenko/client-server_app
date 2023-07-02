@@ -20,7 +20,5 @@
 
 // server sided variables
 #ifdef APPSERVER
-
-#define CLIENTSLIMIT 16
-
+    #define CLIENTSLIMIT 16
 #endif //APPSERVER
