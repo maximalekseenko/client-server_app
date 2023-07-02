@@ -2,9 +2,10 @@
 
 
 
-#include <string>
+// #include <string>
 #include <cstdio>
 #include <cstdlib>
+#include <vector>
 
 
 
@@ -33,10 +34,11 @@ bool data::CreateDB()
 {
     if (sqlite3_exec(
         data::DB, 
-        "CREATE TABLE EMPLOYEE(               \
-        USERNAME    TEXT    UNIQUE  NOT NULL, \
-        PASSWORD    TEXT            NOT NULL, \
-        ACTIVITY    INT             NOT NULL);", 
+        "CREATE TABLE EMPLOYEE(                   \
+        ID          INTEGER PRIMARY KEY, \
+        USERNAME    TEXT    UNIQUE      NOT NULL, \
+        PASSWORD    TEXT                NOT NULL, \
+        ACTIVITY    INT                 NOT NULL);", 
         NULL,
         0, 
         &data::sqlMessaggeError
@@ -54,7 +56,7 @@ bool data::AddUser(const char* username, const char* password)
 {
     if (sqlite3_exec(
         data::DB, 
-        ((std::string)"INSERT INTO EMPLOYEE VALUES('" + username + "', '" + password + "', 0);").c_str(), 
+        ((std::string)"INSERT INTO EMPLOYEE (USERNAME, PASSWORD, ACTIVITY) VALUES('" + username + "', '" + password + "', 0);").c_str(), 
         NULL, 
         0, 
         &data::sqlMessaggeError
@@ -68,34 +70,31 @@ bool data::AddUser(const char* username, const char* password)
 
 
 
-static int callbackGetUserList(void* result, int argc, char** argv, char** azColName)
+static int callbackGetUserList(void* __userData, int __argc, char** __argv, char** __argn)
 {
-    int i;
-    // fprintf(stderr, "%s: ", (const char*)result);
-  
-    for (i = 0; i < argc; i++) {
-        // printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-    }
-  
-    // printf("AAA\n");
+    auto _result = (data::tableDataType *)__userData;
+    // _result->id = __argv[0];
+    _result->username = __argv[1];
+    _result->password = __argv[2];
+    _result->activity = std::stoi(__argv[3]);
     return 0;
 }
 
-data::tableDataType data::GetData(int id)
+data::tableDataType data::GetData(int __id)
 {
     data::tableDataType result;
     int ret = sqlite3_exec(
         data::DB, 
-        "SELECT * FROM EMPLOYEE", 
-        callbackGetUserList, 
-        &result, 
+        ((std::string)"SELECT * FROM EMPLOYEE WHERE ID = " + std::to_string(__id) + " LIMIT 1").c_str(), 
+        callbackGetUserList,
+        &result,
         &data::sqlMessaggeError
     );
 
     if (ret != SQLITE_OK) {
         // printf("[SQLError]: %s\n", data::sqlMessaggeError);
     }
-    // printf("[AAA]: %lu\n", result);
+    return result;
 
     // return;
 }

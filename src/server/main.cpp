@@ -38,12 +38,6 @@ int main(int argc, char* argv[])
     data::Init(argv[0]);
     window::Init();
 
-    data::AddUser("user1", "pass1");
-    data::AddUser("user2", "pass2");
-    data::AddUser("user3", "pass3");
-    data::AddUser("user4", "pass4");
-    data::AddUser("user5", "pass5");
-
     window::Run();
     connection::Listen();
 }

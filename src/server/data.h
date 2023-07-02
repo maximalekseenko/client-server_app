@@ -4,14 +4,18 @@
 
 // buildin libraries
 #include <sqlite3.h>
-#include <vector>
-#include <tuple>
+#include <string>
 
 
 
 namespace data
 {
-    using tableDataType = std::tuple<std::string, std::string, int>;
+    struct tableDataType 
+    {
+        std::string username;
+        std::string password;
+        int activity;
+    };
 
     static char* sqlMessaggeError;
     static bool isInited = false;
