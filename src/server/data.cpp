@@ -18,7 +18,7 @@ void data::Init(const char * __exePath)
     // if db does not exists, create new
     if (sqlite3_exec(
         data::DB, 
-        "select count(type) from sqlite_master where type='table' and name='EMPLOYEE'",
+        "SELECT COUNT(type) FROM sqlite_master WHERE type='table' AND name='EMPLOYEE'",
         NULL,
         0,
         &data::sqlMessaggeError
@@ -35,7 +35,7 @@ bool data::CreateDB()
     if (sqlite3_exec(
         data::DB, 
         "CREATE TABLE EMPLOYEE(                   \
-        ID          INTEGER PRIMARY KEY, \
+        ID          INTEGER PRIMARY KEY,          \
         USERNAME    TEXT    UNIQUE      NOT NULL, \
         PASSWORD    TEXT                NOT NULL, \
         ACTIVITY    INT                 NOT NULL);", 
@@ -68,33 +68,59 @@ bool data::AddUser(const char* username, const char* password)
     return true;
 }
 
-
-
-static int callbackGetUserList(void* __userData, int __argc, char** __argv, char** __argn)
+bool data::RemUser(int __id)
 {
-    auto _result = (data::tableDataType *)__userData;
-    // _result->id = __argv[0];
-    _result->username = __argv[1];
-    _result->password = __argv[2];
-    _result->activity = std::stoi(__argv[3]);
+    if (sqlite3_exec(
+        data::DB, 
+        ((std::string)"DELETE FROM EMPLOYEE WHERE ID = " + std::to_string(__id) + ";").c_str(), 
+        NULL, 
+        0, 
+        &data::sqlMessaggeError
+    ) != SQLITE_OK)
+    {
+        // printf("[SQLError]: %s\n", data::sqlMessaggeError);
+        return false;
+    }
+    return true;
+}
+
+
+
+static int callbackGetUserList(void* __arg, int __argc, char** __argv, char** __argn)
+{
+    auto _harvestedData = (std::vector<data::tableDataType> *)__arg;
+    _harvestedData->push_back(data::tableDataType({std::stoi(__argv[0]), __argv[1], __argv[2], std::stoi(__argv[3])}));
     return 0;
 }
 
-data::tableDataType data::GetData(int __id)
+std::vector<data::tableDataType> data::GetData(int __limit, int __offset)
 {
-    data::tableDataType result;
+    if (__offset < 0 || __limit <= 0) return std::vector<data::tableDataType>();
+    
+    std::vector<data::tableDataType> _result;
     int ret = sqlite3_exec(
         data::DB, 
-        ((std::string)"SELECT * FROM EMPLOYEE WHERE ID = " + std::to_string(__id) + " LIMIT 1").c_str(), 
+        ((std::string)"SELECT * FROM EMPLOYEE " + " LIMIT " + std::to_string(__limit) + " OFFSET " + std::to_string(__offset) + ";").c_str(), 
         callbackGetUserList,
-        &result,
+        &_result,
         &data::sqlMessaggeError
     );
 
     if (ret != SQLITE_OK) {
         // printf("[SQLError]: %s\n", data::sqlMessaggeError);
     }
-    return result;
+    return _result;
 
     // return;
+}
+
+bool data::IsDataExists(int __id)
+{
+    return sqlite3_exec(
+        data::DB, 
+        ((std::string)"SELECT COUNT(1) FROM EMPLOYEE WHERE ID = " + std::to_string(__id) + ";").c_str(), 
+        NULL,
+        0,
+        &data::sqlMessaggeError
+    );
 }

@@ -5,6 +5,7 @@
 // buildin libraries
 #include <sqlite3.h>
 #include <string>
+#include <vector>
 
 
 
@@ -12,6 +13,7 @@ namespace data
 {
     struct tableDataType 
     {
+        int id = -1;
         std::string username;
         std::string password;
         int activity;
@@ -34,8 +36,9 @@ namespace data
 
 
     bool AddUser(const char* __username, const char* __password);
-    bool RemUser(const char* __username, const char* __password);
+    bool RemUser(int __id);
 
 
-    tableDataType GetData(int id);
+    std::vector<tableDataType> GetData(int __limit, int __offset);
+    bool IsDataExists(int __id);
 }

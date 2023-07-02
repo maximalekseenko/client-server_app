@@ -24,6 +24,7 @@ void window::Init()
     initscr();
     keypad(stdscr, TRUE);
 
+
     window::Windows = {
         new WindowGlobal(),
         new WindowNewUser()
@@ -67,7 +68,7 @@ void window::GetUserInput()
 {
     int _inputValue = getch();
     // CANCEL
-         if (_inputValue == KEY_EXIT) window::GetCurrentWindow()->ActionCancel();
+         if (_inputValue == 27) window::GetCurrentWindow()->ActionCancel();
     // UP
     else if (_inputValue == KEY_UP) window::GetCurrentWindow()->ActionUp();
     // RIGHT
@@ -85,19 +86,13 @@ void window::GetUserInput()
 
 void window::Draw()
 {
-
+    werase(window::GetCurrentWindow()->win);
     window::GetCurrentWindow()->DrawBorder();
     window::GetCurrentWindow()->DrawText();
     window::GetCurrentWindow()->DrawSelection(0);
 
     wrefresh(window::GetCurrentWindow()->win);
 }
-
-
-// void window::AdminActionNewUser()
-// {
-//     window::currentSelectedWindow = WNEWUSER;
-// }
 
 void window::OpenWindow(int __winID)
 {
