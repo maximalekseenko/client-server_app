@@ -1,26 +1,33 @@
-Simple program for 
+Simple program for tracking user activity.
+
 
 
 # Compiling
-This code is compiles via Cmake.
+This code is compiled via [Cmake](https://cmake.org).
 
-After compiling [./build](./build/) directory will appear. 
+## Settings
+Before compiling edit [settings.h](./src/settings.h), setting server ip address.
 
-There will be two files: [server](./build/server) and [client](./build/client);
+## Results
+After compiling, [./build](./build/) directory will appear, containing two files: [server](./build/server) and [client](./build/client);
 
+## Requirements
+C++20
+sqlite3
+ncurses.h
 
-# Controls
-Server Application includes user interface for interacting with database.
+# Running
+
+Running client with no server avaliable
+
+## Controls
+Server Application includes some user interface for interacting with database.
 
 Common actions are:
 * Double-tap `Esc` - Exit or cancel;
 * `Enter` - Select;
 * `Arrow` keys - Move cursor.
 
-# Req
-C++20
-sqlite3
-ncurses.h
 
 
 # Structure
