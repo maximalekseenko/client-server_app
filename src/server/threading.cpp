@@ -12,23 +12,20 @@
 #include <cstdio>
 #include <cstdlib>
 
-
-
 // custom libraries
 #include "connection.h"
-
-#include <errno.h>
-
+#include "data.h"
 
 
-void threading::CreateThread(int clientSocket)
+
+void threading::CreateThread(int __clientSocket)
 {
     // create
     pthread_create(
         &threading::clientTreads[threading::clientTreadsAmount++], 
         NULL, 
         threading::ClientThread, 
-        &clientSocket
+        &__clientSocket
     );
 
     // update
@@ -51,22 +48,43 @@ void threading::Update()
 void* threading::ClientThread (void* param)
 {
     int clientSocket = *(int*)param;
-    // printf("Connection!\n");
+    char buffer[BUFFSIZE];
 
+    // login
+    recv(clientSocket, buffer, BUFFSIZE, 0);
+    int _id = threading::Login(buffer);
 
-        // std::string _message;
-        // recv(connection::GetMasterSocket(), &_message, BUFFSIZE, 0);
-        // printf("%s\n",_message.c_str());
+    // loop
+    if (_id > 0) 
+        while (recv(clientSocket, buffer, BUFFSIZE, 0) > 0)
+            send(clientSocket, "1", BUFFSIZE, 0);
 
-    char buffer[255];
-    // while (true)
-    // {
-    //     // poll();
-    //     // auto log = read(clientSocket, &buffer, BUFFSIZE);
-    // }
-    recv(clientSocket, buffer, sizeof(buffer), 0);
-    // printf("FUCK THE %s\n", strerror(errno));
-    // printf("%s\n", buffer);
-
+    threading::Logout(_id);
     pthread_exit(NULL);
+}
+
+
+bool threading::IsLoggedin(int __id)
+{
+    return threading::loggedinUserIds.find(__id) != threading::loggedinUserIds.end();
+}
+
+
+int threading::Login(char __buffer[BUFFSIZE])
+{
+    // get password and username from buffer
+    std::string _bufferSting = std::string(__buffer);
+    int _separatorPosition = _bufferSting.find('\n');
+    std::string _username = _bufferSting.substr(0, _separatorPosition);
+    std::string _password = _bufferSting.substr(_separatorPosition+1);
+
+    int _id = data::CheckPass(_username.c_str(), _password.c_str()).id;
+    threading::loggedinUserIds.insert(_id);
+
+    return _id;
+}
+
+void threading::Logout(int __id)
+{
+    threading::loggedinUserIds.extract(__id);
 }

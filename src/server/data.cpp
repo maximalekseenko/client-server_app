@@ -96,7 +96,7 @@ static int callbackGetUserList(void* __arg, int __argc, char** __argv, char** __
 std::vector<data::tableDataType> data::GetData(int __limit, int __offset)
 {
     if (__offset < 0 || __limit <= 0) return std::vector<data::tableDataType>();
-    
+
     std::vector<data::tableDataType> _result;
     int ret = sqlite3_exec(
         data::DB, 
@@ -123,4 +123,26 @@ bool data::IsDataExists(int __id)
         0,
         &data::sqlMessaggeError
     );
+}
+
+
+
+static int callbackCheckPass(void* __arg, int __argc, char** __argv, char** __argn)
+{
+    auto _harvestedData = (data::tableDataType *)__arg;
+    *_harvestedData = data::tableDataType({std::stoi(__argv[0]), __argv[1], __argv[2], std::stoi(__argv[3])});
+    return 0;
+}
+
+data::tableDataType data::CheckPass(const char* __username, const char* __password)
+{
+    data::tableDataType _return;
+    sqlite3_exec(
+        data::DB, 
+        ((std::string)"SELECT * FROM EMPLOYEE WHERE USERNAME = '" + __username + "' AND PASSWORD = '" + __password + "';").c_str(), 
+        callbackCheckPass,
+        &_return,
+        &data::sqlMessaggeError
+    );
+    return _return;
 }

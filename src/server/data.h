@@ -30,7 +30,7 @@ namespace data
     bool CreateDB();
 
 
-    bool CheckPass(const char* __username, const char* __password);
+    tableDataType CheckPass(const char* __username, const char* __password);
 
 
     bool Write(const char* __username, int __type);

@@ -5,6 +5,7 @@
 // custom libraries
 #include "window.h"
 #include "data.h"
+#include "threading.h"
 
 
 
@@ -66,8 +67,14 @@ struct WindowGlobal : window::Window
             if (i == selectedUserDataNum) selectedUser = *_userData;
 
             mvwaddstr(win, 2 + i, 1, (
-                std::to_string(_userData->id) + "\t" + _userData->username
+                std::to_string(_userData->id)
             ).c_str());
+            mvwaddstr(win, 2 + i, 4, (
+                 _userData->username
+            ).c_str());
+            mvwaddstr(win, 2 + i, 20,
+                threading::IsLoggedin(_userData->id) ? "◉" : "◯"
+            );
         }
 
         // draw bottom "there is more"

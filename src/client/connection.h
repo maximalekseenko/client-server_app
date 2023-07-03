@@ -41,17 +41,12 @@ namespace connection
 
 
     /**
-     * @brief Creates thread for client talk to server
+     * @brief Starts client talk to server
      * 
      */
-    void CreateThread();
+    void Start();
 
 
-    /**
-     * @brief Thread for client
-     * 
-     */
-    void* ClientThread(void* args);
 
 
     /**

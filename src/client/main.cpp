@@ -29,7 +29,5 @@ int main (int argc, char* argv[])
 
     connection::Connect();
 
-    connection::CreateThread();
-
-    // connection::SentData(321);
+    connection::Start();
 }

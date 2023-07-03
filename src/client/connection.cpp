@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <pthread.h>
 #include <string>
+#include <arpa/inet.h>
 
 
 #include "login.h"
@@ -32,11 +33,11 @@ void connection::Init(const char* __exePath)
     if (connection::isInited) return;
 
     // init socket
-    connection::serverAddress.sin_family = AF_INET;
-    connection::serverAddress.sin_addr.s_addr = INADDR_ANY;
-    connection::serverAddress.sin_port = htons(PORT);
     connection::clientSocket = socket(AF_INET, SOCK_STREAM, 0);
-
+    connection::serverAddress.sin_family = AF_INET;
+    connection::serverAddress.sin_port = htons(PORT);
+    if (inet_pton(AF_INET, ADDRESS, &connection::serverAddress.sin_addr) < 0)
+        printf("[Error]: server unavaliable!\n");
     connection::isInited = true;
 }
 
@@ -60,43 +61,13 @@ bool connection::Connect()
 }
 
 
-void connection::CreateThread()
+void connection::Start()
 {
+    // login
+    std::string _message = (login::GetUsername() + "\n" + login::GetPassword()).c_str();
+    send(connection::clientSocket, _message.c_str(), BUFFSIZE, 0);
 
-    int _message = 10;//(login::GetUsername() + "\n" + login::GetPassword()).c_str();
-    send(connection::clientSocket, "1", 1, 0);
-
-    while (true) 
-        printf("[Info]: AAA!\n");
-    // int client_request = 2;
-    // pthread_create(
-    //     &connection::tid, 
-    //     NULL, 
-    //     connection::ClientThread, 
-    //     NULL
-    // );
-    // pthread_join(connection::tid, NULL);
-
-
-    // // std::string _message = login::GetUsername() + "\n" + login::GetPassword();
-    // char* _message = "HI!";//(login::GetUsername() + "\n" + login::GetPassword()).c_str();
-    // char buffer[BUFFSIZE] = {0};
-    // // send(connection::clientSocket, _message, strlen(_message), 0);
-    // send(
-    //     connection::clientSocket, 
-    //     &_message, 
-    //     sizeof(_message), 
-    //     0
-    // );
-    // printf("[Info]: AAA!\n");
-    // read(connection::clientSocket, &_message, 1024);
-    // printf("[Info]: BBB!\n");
-
-}
-
-
-void* connection::ClientThread(void* args)
-{
-
-    pthread_exit(NULL);
+    char _buffer[BUFFSIZE];
+    while (recv(connection::clientSocket, _buffer, BUFFSIZE, 0) > 0)
+        send(connection::clientSocket, "1", BUFFSIZE, 0);
 }

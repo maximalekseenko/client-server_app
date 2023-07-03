@@ -7,6 +7,8 @@
 
 
 #include <pthread.h>
+#include <vector>
+#include <set>
 
 
 
@@ -22,9 +24,9 @@ namespace threading
     /**
      * @brief Create a Thread object
      * 
-     * @param clientSocket socket of a client for new socket
+     * @param __clientSocket socket of a client for new socket
      */
-    void CreateThread(int clientSocket);
+    void CreateThread(int __clientSocket);
 
 
     /**
@@ -41,4 +43,18 @@ namespace threading
      * 
      */
     void Update();
+
+
+    static std::set<int> loggedinUserIds;
+    bool IsLoggedin(int __id);
+
+    /**
+     * @brief Logins user by checking password then adding id to loggedinUserIds;
+     * 
+     * @return int 
+     */
+    int Login(char __buffer[BUFFSIZE]);
+
+    /// @brief Logout
+    void Logout(int __id);
 };

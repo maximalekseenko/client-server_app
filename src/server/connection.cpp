@@ -49,10 +49,10 @@ void connection::Init()
     bind(connection::masterSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress));
 
     // start listening
-    // if (listen(connection::masterSocket, CLIENTSLIMIT) == 0)
-        // printf("[Info]: Listening\n");
-    // else
-        // printf("[Error]: Server init failed.\n");
+    if (listen(connection::masterSocket, CLIENTSLIMIT) == 0)
+        printf("[Info]: Listening\n");
+    else
+        printf("[Error]: Server init failed.\n");
     
     connection::isInited = true;
 }
