@@ -3,7 +3,12 @@
 
 
 // buildin lybraries
+#include <sys/socket.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 
 

@@ -11,6 +11,8 @@
 namespace login
 {
     static std::string username, password;
+    std::string GetUsername();
+    std::string GetPassword();
 
     static std::string configFilePath;
     static std::fstream configFile;

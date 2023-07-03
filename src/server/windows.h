@@ -1,21 +1,29 @@
 #pragma once
 
+
+
+// custom libraries
 #include "window.h"
 #include "data.h"
 
 
+
+// ids in window::Windows
 #define WGLOBAL_ID 0
 #define WNEWUSER_ID 1
 
 
+
 #define WGLOBAL_H 20
 #define WGLOBAL_W 50
-
 #define WGLOBAL_USERSTOSHOW 10
 struct WindowGlobal : window::Window
 {
+    /// @brief cursor position
     int selectedUserDataNum = 0;
+    /// @brief user list offset
     int showedUserDataOffset = 0;
+    /// @brief hashed selected user
     data::tableDataType selectedUser;
     WindowGlobal()
     { 
@@ -26,24 +34,35 @@ struct WindowGlobal : window::Window
             0
         ); 
     }
+
+    void Draw()
+    {
+        DrawBorder();
+        DrawUsers();
+        DrawText();
+    }
     
     void DrawBorder()
     {
         box(win, 0, 0);
-        DrawUsers();
     }
     void DrawUsers()
     {
+        // clear hashed selected user
+        selectedUser = data::tableDataType();
+
+        // get list of users
         auto _userDataToShow = data::GetData(WGLOBAL_USERSTOSHOW, showedUserDataOffset);
 
-        // top "there is more"
+        // draw top "there is more"
         if (data::GetData(1, showedUserDataOffset - 1).size()) mvwaddstr(win, 1, 1, "  ...");
 
-        // user list
+        // draw user list
         for (int i = 0; i < _userDataToShow.size(); i ++)
         {
             auto _userData = &_userDataToShow[i];
 
+            // hash selected user
             if (i == selectedUserDataNum) selectedUser = *_userData;
 
             mvwaddstr(win, 2 + i, 1, (
@@ -51,7 +70,7 @@ struct WindowGlobal : window::Window
             ).c_str());
         }
 
-        // bottom "there is more"
+        // draw bottom "there is more"
         if (data::GetData(1, showedUserDataOffset + WGLOBAL_USERSTOSHOW).size()) mvwaddstr(win, WGLOBAL_USERSTOSHOW + 2, 1, "  ...");
     }
     void DrawText()
@@ -60,14 +79,10 @@ struct WindowGlobal : window::Window
         // hints
         mvwaddstr(win, WGLOBAL_H - 2, 1, "[n]: new user; [e]: delete user");
     }
-    void DrawSelection(int)
-    {
-
-    }
 
     void SetCursor()
     {
-        move(
+        move( // location of selected user
             getbegy(win) + 2 + selectedUserDataNum, 
             getbegx(win) + 1
         );
@@ -75,9 +90,10 @@ struct WindowGlobal : window::Window
     }
 
     void ActionSelect(){ window::OpenWindow(WNEWUSER_ID); }
-    void ActionCancel(){}
+
     void ActionUp()
     {
+        // move cursor up
         if (selectedUserDataNum == 0)
         {
             if (data::GetData(1, showedUserDataOffset - 1).size())
@@ -87,6 +103,7 @@ struct WindowGlobal : window::Window
     }
     void ActionDown()
     {
+        // move cursor down
         if (selectedUserDataNum == WGLOBAL_USERSTOSHOW -1)
         {
             if (data::GetData(1, showedUserDataOffset + WGLOBAL_USERSTOSHOW).size())
@@ -94,7 +111,6 @@ struct WindowGlobal : window::Window
         }
         else selectedUserDataNum ++;
     }
-
     void ActionLeft(){ ActionUp(); }
     void ActionRight(){ ActionDown(); }
 
@@ -104,6 +120,8 @@ struct WindowGlobal : window::Window
         if (ch == 'e') data::RemUser(selectedUser.id);
     }
 };
+
+
 
 #define WNEWUSER_H 4
 #define WNEWUSER_W 28
@@ -128,7 +146,11 @@ struct WindowNewUser : window::Window
         isWrightingUsername = true;
     }
 
-    virtual void OnClose() { }
+    void Draw()
+    {
+        DrawBorder();
+        DrawText();
+    }
 
     void DrawBorder()
     {

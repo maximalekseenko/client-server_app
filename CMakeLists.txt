@@ -31,11 +31,11 @@ include_directories(${CURSES_INCLUDE_DIR})
 set(__CLIENT_DIR ${CMAKE_SOURCE_DIR}/src/client) 
 
 set(__CLIENT_SRCS 
-    ${__CLIENT_DIR}/main.cpp 
     ${__CLIENT_DIR}/login.cpp
     ${__CLIENT_DIR}/login.h 
     ${__CLIENT_DIR}/connection.cpp
     ${__CLIENT_DIR}/connection.h
+    ${__CLIENT_DIR}/main.cpp 
 )
 
 add_executable(client ${__CLIENT_SRCS})
@@ -49,7 +49,6 @@ add_executable(client ${__CLIENT_SRCS})
 set(__SERVER_DIR ${CMAKE_SOURCE_DIR}/src/server) 
 
 set(__SERVER_SRCS 
-    ${__SERVER_DIR}/main.cpp
     ${__SERVER_DIR}/connection.cpp
     ${__SERVER_DIR}/connection.h
     ${__SERVER_DIR}/threading.cpp
@@ -59,6 +58,7 @@ set(__SERVER_SRCS
     ${__SERVER_DIR}/window.cpp
     ${__SERVER_DIR}/window.h
     ${__SERVER_DIR}/windows.h
+    ${__SERVER_DIR}/main.cpp
 )
 
 add_executable(server ${__SERVER_SRCS})

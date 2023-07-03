@@ -14,7 +14,14 @@
 
 
 
-void threading::CreateThread(int* clientSocket)
+// custom libraries
+#include "connection.h"
+
+#include <errno.h>
+
+
+
+void threading::CreateThread(int clientSocket)
 {
     // create
     pthread_create(
@@ -43,7 +50,23 @@ void threading::Update()
 
 void* threading::ClientThread (void* param)
 {
-    printf("Connection!\n");
-    
+    int clientSocket = *(int*)param;
+    // printf("Connection!\n");
+
+
+        // std::string _message;
+        // recv(connection::GetMasterSocket(), &_message, BUFFSIZE, 0);
+        // printf("%s\n",_message.c_str());
+
+    char buffer[255];
+    // while (true)
+    // {
+    //     // poll();
+    //     // auto log = read(clientSocket, &buffer, BUFFSIZE);
+    // }
+    recv(clientSocket, buffer, sizeof(buffer), 0);
+    // printf("FUCK THE %s\n", strerror(errno));
+    // printf("%s\n", buffer);
+
     pthread_exit(NULL);
 }

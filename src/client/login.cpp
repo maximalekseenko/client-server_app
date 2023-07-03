@@ -6,6 +6,8 @@
 #include <iostream>
 #include <filesystem>
 
+std::string login::GetUsername() { return login::username; }
+std::string login::GetPassword() { return login::password; }
 
 
 void login::Init(const char* __exePath)
@@ -18,19 +20,16 @@ void login::Init(const char* __exePath)
 
 bool login::Login()
 {
-    if (!login::isInited) return false; // TODO ERROR
-
     if (!login::ReadLogin())
         return login::WriteLogin();
         
+    printf("%s - %s \n", login::username.c_str(), login::password.c_str());
     return true;
 }
 
 
 bool login::ReadLogin()
 {
-    if (!login::isInited) return false; // TODO ERROR
-
     // check if exists
     login::configFile.open(login::configFilePath, std::fstream::in);
     if (!configFile.good()) 
@@ -38,6 +37,10 @@ bool login::ReadLogin()
         login::configFile.close();
         return false;
     }
+
+    // clear
+    login::username.clear();
+    login::password.clear();
 
     // read
     login::configFile >> login::username;

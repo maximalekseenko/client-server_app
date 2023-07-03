@@ -12,6 +12,7 @@
 /// encryption number
 #define ENCNUM 4793968276703868376938
 
+#define CHARSIZE 256
 
 // client sided variables
 #ifdef APPCLIENT

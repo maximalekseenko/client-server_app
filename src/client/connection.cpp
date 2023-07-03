@@ -12,28 +12,30 @@
 #include <cstdio>
 #include <cstdlib>
 #include <pthread.h>
+#include <string>
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <semaphore.h>
+#include "login.h"
 
 
+int EncodeMessage(std::string __message) {
+    int _encoded = 0;
+
+    for (int _i = 0; _i < __message.size(); _i ++) {
+        _encoded = _encoded * CHARSIZE + int(__message[_i]);
+    }
+    return _encoded;
+}
 
 void connection::Init(const char* __exePath)
 {
     if (connection::isInited) return;
 
     // init socket
-    connection::clientSocket = socket(AF_INET, SOCK_STREAM, 0);
     connection::serverAddress.sin_family = AF_INET;
     connection::serverAddress.sin_addr.s_addr = INADDR_ANY;
     connection::serverAddress.sin_port = htons(PORT);
+    connection::clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     connection::isInited = true;
 }
@@ -42,17 +44,11 @@ void connection::Init(const char* __exePath)
 
 bool connection::Connect()
 {
-    if (!connection::isInited) return false;
-
-    // connect
-    int _connectionStatus = connect(
+    if (connect(
         connection::clientSocket,
-        (struct sockaddr*)&connection::serverAddress,
+        (struct sockaddr*) &connection::serverAddress,
         sizeof(connection::serverAddress)
-    );
- 
-    // check for success
-    if (_connectionStatus < 0) {
+    ) < 0) {
         printf("[Error]: connection failed!\n");
         return false;
     }
@@ -66,28 +62,41 @@ bool connection::Connect()
 
 void connection::CreateThread()
 {
-    int client_request = 2;
-    pthread_create(
-        &connection::tid, 
-        NULL, 
-        connection::ClientThread, 
-        &client_request
-    );
-    pthread_join(connection::tid, NULL);
+
+    int _message = 10;//(login::GetUsername() + "\n" + login::GetPassword()).c_str();
+    send(connection::clientSocket, "1", 1, 0);
+
+    while (true) 
+        printf("[Info]: AAA!\n");
+    // int client_request = 2;
+    // pthread_create(
+    //     &connection::tid, 
+    //     NULL, 
+    //     connection::ClientThread, 
+    //     NULL
+    // );
+    // pthread_join(connection::tid, NULL);
+
+
+    // // std::string _message = login::GetUsername() + "\n" + login::GetPassword();
+    // char* _message = "HI!";//(login::GetUsername() + "\n" + login::GetPassword()).c_str();
+    // char buffer[BUFFSIZE] = {0};
+    // // send(connection::clientSocket, _message, strlen(_message), 0);
+    // send(
+    //     connection::clientSocket, 
+    //     &_message, 
+    //     sizeof(_message), 
+    //     0
+    // );
+    // printf("[Info]: AAA!\n");
+    // read(connection::clientSocket, &_message, 1024);
+    // printf("[Info]: BBB!\n");
+
 }
 
 
 void* connection::ClientThread(void* args)
 {
-    int client_request = *((int*)args);
-
-    send(
-        connection::clientSocket, 
-        &client_request, 
-        sizeof(client_request), 
-        0
-    );
-    // printf("[Info]: AAA!\n");
 
     pthread_exit(NULL);
 }

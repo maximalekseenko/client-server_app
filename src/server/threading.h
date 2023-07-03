@@ -24,7 +24,7 @@ namespace threading
      * 
      * @param clientSocket socket of a client for new socket
      */
-    void CreateThread(int* clientSocket);
+    void CreateThread(int clientSocket);
 
 
     /**

@@ -11,6 +11,7 @@
 
 namespace data
 {
+    /// @brief Type of table row.
     struct tableDataType 
     {
         int id = -1;
@@ -18,7 +19,7 @@ namespace data
         std::string password;
         int activity;
     };
-
+ 
     static char* sqlMessaggeError;
     static bool isInited = false;
     static sqlite3* DB;

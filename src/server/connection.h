@@ -3,7 +3,14 @@
 
 
 // buildin libraries
+#include <sys/socket.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <string>
 
 
 
@@ -11,6 +18,7 @@ namespace connection
 {
     /// @brief Socket for server.
     static int masterSocket;
+    int GetMasterSocket();
 
     /// @brief Server address.
     static struct sockaddr_in serverAddress;
@@ -21,6 +29,9 @@ namespace connection
     /// @brief was this module inited before (via Init)
     static bool isInited = false;
 
+
+
+    std::string DecodeMessage(int __message);
 
     /**
      * @brief 
