@@ -5,11 +5,24 @@ Simple program for tracking user activity.
 # Compiling
 This code is compiled via [Cmake](https://cmake.org).
 
+After compiling, [./build](./build/) directory will appear, containing two files: [server](./build/server) and [client](./build/client);
+
 ## Settings
 Before compiling edit [settings.h](./src/settings.h), setting server ip address.
 
-## Results
-After compiling, [./build](./build/) directory will appear, containing two files: [server](./build/server) and [client](./build/client);
+## Running
+Example usage:
+* run [server](./build/server) on first device;
+* add new users by pressing `n` while in global menu:
+    * type password and username;
+    * switch between password and username by arrow keys;
+    * confirm new user by pressing `enter` key;
+    * cancel new user creation by double-pressing `escape` key;
+* switch between users in global menu by arrow keys;
+* delete extra users by pressing `n` while in global menu;
+* run [client](./build/client) on second device;
+* if runned first time: enter username and password;
+* update [server](./build/server) by pressing any button;
 
 ## Requirements
 C++20
