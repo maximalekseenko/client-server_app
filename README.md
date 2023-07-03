@@ -10,7 +10,12 @@ After compiling, [./build](./build/) directory will appear, containing two files
 ## Settings
 Before compiling edit [settings.h](./src/settings.h), setting server ip address.
 
-## Running
+## Requirements
+C++20
+sqlite3
+ncurses.h
+
+# Running
 Example usage:
 * run [server](./build/server) on first device;
 * add new users by pressing `n` while in global menu:
@@ -23,24 +28,6 @@ Example usage:
 * run [client](./build/client) on second device;
 * if runned first time: enter username and password;
 * update [server](./build/server) by pressing any button;
-
-## Requirements
-C++20
-sqlite3
-ncurses.h
-
-# Running
-
-Running client with no server avaliable
-
-## Controls
-Server Application includes some user interface for interacting with database.
-
-Common actions are:
-* Double-tap `Esc` - Exit or cancel;
-* `Enter` - Select;
-* `Arrow` keys - Move cursor.
-
 
 
 # Structure
