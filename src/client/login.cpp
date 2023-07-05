@@ -4,7 +4,7 @@
 
 // buildin libraries
 #include <iostream>
-#include <filesystem>
+#include <filesystem> 
 
 std::string login::GetUsername() { return login::username; }
 std::string login::GetPassword() { return login::password; }
@@ -12,7 +12,7 @@ std::string login::GetPassword() { return login::password; }
 
 void login::Init(const char* __exePath)
 {
-    login::configFilePath = ((std::string)__exePath).substr(0, ((std::string)__exePath).find_last_of("\\/")) + "/config";
+    login::configFilePath = (std::filesystem::path(__exePath).parent_path() / "config").string();
 
     login::isInited = true;
 }

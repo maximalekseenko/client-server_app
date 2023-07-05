@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
+#include <filesystem> 
 
 
 
@@ -13,7 +14,7 @@ void data::Init(const char * __exePath)
 {
     if (data::isInited) return;
 
-    sqlite3_open((((std::string)__exePath).substr(0, ((std::string)__exePath).find_last_of("\\/")) + "/server.sqlite").c_str(), &data::DB);
+    sqlite3_open((std::filesystem::path(__exePath).parent_path() / "server.sqlite").c_str(), &data::DB);
 
     // if db does not exists, create new
     if (sqlite3_exec(
