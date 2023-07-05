@@ -23,7 +23,6 @@ bool login::Login()
     if (!login::ReadLogin())
         return login::WriteLogin();
         
-    printf("%s - %s \n", login::username.c_str(), login::password.c_str());
     return true;
 }
 

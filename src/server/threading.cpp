@@ -15,6 +15,7 @@
 // custom libraries
 #include "connection.h"
 #include "data.h"
+// #include "window.h"
 
 
 
@@ -78,13 +79,26 @@ int threading::Login(char __buffer[BUFFSIZE])
     std::string _username = _bufferSting.substr(0, _separatorPosition);
     std::string _password = _bufferSting.substr(_separatorPosition+1);
 
+    // get id
     int _id = data::CheckPass(_username.c_str(), _password.c_str()).id;
+
+    // wrond password
+    // if (_id <= 0) return _id;
+    
+    // add to logged in
     threading::loggedinUserIds.insert(_id);
+
+    // update window
+    // window::Draw();
 
     return _id;
 }
 
 void threading::Logout(int __id)
 {
+    // remove from logged in
     threading::loggedinUserIds.extract(__id);
+
+    // update window
+    // window::Draw();
 }
